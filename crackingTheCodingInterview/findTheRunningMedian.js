@@ -1,70 +1,48 @@
 function main() {
   var n = parseInt(readLine());
   var a = [];
-  var sorted = [];
+  var s = [];
   var even = true;
-  
 
-  // // turn this into binarySearch for insert
-  // var sortHelper = function(newElement, sortedArray) {
-  //   if (sortedArray.length === 0) {
-  //     return [newElement];
-  //   } else if (sortedArray[sortedArray.length - 1] < newElement) {
-  //     sortedArray.push(newElement);
-  //     return sortedArray;
-  //   } else {
-  //     for (var i = 0; i < sortedArray.length; i++) {
-	 //      if (sortedArray[i] > newElement) {
-  //         var first = sortedArray.slice(0, i);
-  //         var second = sortedArray.slice(i);
-  //         var newArray = first.push(newElement) + second;
-  //         return newArray;
-	 //      }
-  //     }
-  //   }      
-  // }
-  var findIndex = function(element, array) {
-    var lowerBound = 0;
-    var upperBound = array.length - 1;
-    var searchAt = Math.floor((upperBound - lowerBound) / 2);
-
-
-    while (element < array[searchAt - 1] || element > array[searchAt]) {
-      if (element < array[searchAt - 1]) {
-        upperBound = searchAt;
-      } else {
-        lowerBound = searchAt;
-      }
-      searchAt = Math.floor((upperBound - lowerBound) / 2);
+  var findIndex = function(element) {
+    if (s.length === 0 || element <= s[0]) {
+      return 0;
     }
-    return searchAt;
+    if (s[s.length - 1] <= element) {
+      return s.length;
+    }
+
+    var lowerBound = 0; 
+    var upperBound = s.length; 
+    var index = Math.floor((upperBound - lowerBound) / 2) + lowerBound; 
+
+    while(!(s[index - 1] <= element && s[index] >= element)) {
+      if (s[index - 1] > element) {
+        upperBound = index;
+      } else {
+        lowerBound = index;
+      }
+      index = Math.floor((upperBound - lowerBound) / 2) + lowerBound;
+    }
+    return index;
   }
 
-  var insert = function(index, array, element) {
-    var first = array.slice(0, index);
-    var second = array.slice(index);
-    return first.push(element) + second;
-  }
-  
   for (var i = 0; i < n; i++) {
     a[i] = parseInt(readLine());
-    //sorted = sortHelper(a[i], sorted);
-    // find index to insert
-    var index = findIndex(a[i], sorted)
-    // insert at index
-    insert(index, sorted, a[i]);
+    // find index where a[i] belongs in sorted array
+    var sortedIndex = findIndex(a[i], a);
+    // insert into sorted array
+    s.splice(sortedIndex, 0, a[i]);
     even = !even;
     
+    // find median
+    var median;
     if (even) {
-      var one = sorted[sorted.length / 2];
-      var two = sorted[(sorted.length / 2) - 1];
-      if (one + two % 2 === 0) {
-        console.log(one + two / 2 + '.0');
-      } else {
-        console.log((one + two) / 2);
-      }
+      median = (s[(s.length / 2) - 1] + s[s.length / 2]) / 2;
     } else {
-      console.log(sorted[Math.floor(sorted.length / 2)] + '.0');
+      median = s[Math.floor(s.length / 2)];
     }
+    // console median
+    median % 1 === 0 ? console.log(median + '.0') : console.log(median);
   }
 }
