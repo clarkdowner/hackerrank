@@ -1,15 +1,21 @@
 function main() {
   var n = parseInt(readLine());
   var dictionary = {};
-  var (var a0 = 0; a0 < n; a0++) {
+  for (var a0 = 0; a0 < n; a0++) {
     var op_temp = readLine().split(' ');
     var op = op_temp[0];
     var contact = op_temp[1];
 
     if (op === 'add') {
       //add to dictionary
+      var min = Math.min(7, contact.length);
+      for (var i = 0; i < min; i++) {
+        var currWord = contact.slice(0, i + 1);
+        dictionary[currWord] === undefined ? dictionary[currWord] = 1 : dictionary[currWord]++;
+      }
     } else {
       //search in dictionary
+      dictionary[contact] === undefined ? console.log(0) : console.log(dictionary[contact]);
       //console results
     }
   }
