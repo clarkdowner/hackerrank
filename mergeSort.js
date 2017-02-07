@@ -68,6 +68,9 @@ var test4 = [1,1,1,1,1];
 var test5 = [1,2,3,4,5,6,7,8];
 var test6 = [1,2,6,5,4,3,7,8];
 var test7 = [4,2,7,1,8,5,6,3];
+var test8 = [1];
+var test9 = [1,0];
+var test10 = [0,1]
 assert(mergeSort(test1), [1,2,3,4,5]);
 assert(mergeSort(test2), [1,2,3,4,5]);
 assert(mergeSort(test3), []);
@@ -75,3 +78,6 @@ assert(mergeSort(test4), [1,1,1,1,1]);
 assert(mergeSort(test5), [1,2,3,4,5,6,7,8]);
 assert(mergeSort(test6), [1,2,3,4,5,6,7,8]);
 assert(mergeSort(test7), [1,2,3,4,5,6,7,8]);
+assert(mergeSort(test8), [1]);
+assert(mergeSort(test9), [0,1]);
+assert(mergeSort(test10), [0,1]);
