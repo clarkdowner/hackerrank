@@ -1,9 +1,9 @@
 var search = function(array, target) {
-   min = 0; // 4
-   max = array.length; // 5
+   min = 0; 
+   max = array.length - 1; 
    
    while (min <= max) {
-      var searchAt = Math.floor((max - min) / 2) + min; // 3, 
+      var searchAt = Math.floor((max - min) / 2) + min;
       if (array[searchAt] === target) {
          return searchAt;
       } else if (array[searchAt] < target) {
