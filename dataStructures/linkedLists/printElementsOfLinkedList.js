@@ -1,3 +1,6 @@
 function print(head) {
-  console.log(head)
+  if (head !== null) {
+    console.log(head.data);
+    print(head.next);
+  }
 }
