@@ -8,7 +8,31 @@
 //  -->
  
 function findMatrixSum(matrix) {
+  var max = 0;
 
+  var addMatrixRows = function(sum, usedCols, remainingRows) {
+
+    if (remainingRows.length === 0) {
+      max = sum > max ? sum : max;
+      return;
+    } 
+
+    var currRow = remainingRows[0];
+
+    for (var i = 0; i < currRow.length; i++) {
+      if (usedCols.indexOf(i) === -1) {
+        var newSum = sum + currRow[i];
+        var newUsedCols = usedCols.concat([i]);
+        var newRemainingRows = remainingRows.slice(1);
+
+        addMatrixRows(newSum, newUsedCols, newRemainingRows);
+      }
+    }
+  }  
+
+  addMatrixRows(0, [], matrix);
+  // console.log(maxCols);
+  return max;
 }
  
  
