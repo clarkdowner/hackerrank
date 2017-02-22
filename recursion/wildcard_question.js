@@ -33,6 +33,14 @@ function get(doc, path, travelled, pathObj) {
   return pathObj;
 }
 
+
+// create a function 'get', which will take two parameters
+// the first parameter will be a document
+// the second parameter a path
+// and returns the object located at the given path.
+// The path my contain a wildcard, '*', which will substitute for
+// every available path at the currect location within the document.
+// Test cases are below.
 doc = {
   'a': {
     'b': {
