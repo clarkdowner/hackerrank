@@ -9,13 +9,25 @@
  
 function findMatrixSum(matrix) {
   var max = 0;
+  var maxHashes = {};
+
 
   var addMatrixRows = function(sum, usedCols, remainingRows) {
+    console.log('usedCols: ', usedCols);
 
     if (remainingRows.length === 0) {
       max = sum > max ? sum : max;
       return;
     } 
+
+    var key = usedCols.sort().toString();
+
+    if (maxHashes[key] === undefined || maxHashes[key] < sum) {
+      maxHashes[key] = sum;
+    } else {
+      console.log('repeat');
+      return;
+    }
 
     var currRow = remainingRows[0];
 
@@ -31,7 +43,7 @@ function findMatrixSum(matrix) {
   }  
 
   addMatrixRows(0, [], matrix);
-  // console.log(maxCols);
+  console.log(Object.keys(maxHashes).length)
   return max;
 }
  
@@ -59,5 +71,5 @@ var board2 = [[7,  53, 183, 439, 863, 497, 383, 563,  79, 973, 287,  63, 343, 16
 [815, 559, 813, 459, 522, 788, 168, 586, 966, 232, 308, 833, 251, 631, 107],
 [813, 883, 451, 509, 615,  77, 281, 613, 459, 205, 380, 274, 302,  35, 805]]
 
-console.log(findMatrixSum(board) === 3315)
-// console.log(findMatrixSum(board2) === 13938)
+// console.log(findMatrixSum(board) === 3315)
+console.log(findMatrixSum(board2) === 13938)
