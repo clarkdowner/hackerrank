@@ -6,47 +6,84 @@
 // 627    343    773    959x   943
 // 767x    473    103    699   303
 //  -->
- 
-function findMatrixSum(matrix) {
+
+function findIndMax(matrix) {
   var max = 0;
-  var maxHashes = {};
 
+  // mapping over each element
+  matrix[0].map(function(_row, i) {
+    return matrix.map(function(_col, j) {
+      max = matrix[i][j] > max ? matrix[i][j] : max;
+    })
+  })
 
-  var addMatrixRows = function(sum, usedCols, remainingRows) {
-    console.log('usedCols: ', usedCols);
-
-    if (remainingRows.length === 0) {
-      max = sum > max ? sum : max;
-      return;
-    } 
-
-    var key = usedCols.sort().toString();
-
-    if (maxHashes[key] === undefined || maxHashes[key] < sum) {
-      maxHashes[key] = sum;
-    } else {
-      console.log('repeat');
-      return;
-    }
-
-    var currRow = remainingRows[0];
-
-    for (var i = 0; i < currRow.length; i++) {
-      if (usedCols.indexOf(i) === -1) {
-        var newSum = sum + currRow[i];
-        var newUsedCols = usedCols.concat([i]);
-        var newRemainingRows = remainingRows.slice(1);
-
-        addMatrixRows(newSum, newUsedCols, newRemainingRows);
-      }
-    }
-  }  
-
-  addMatrixRows(0, [], matrix);
-  console.log(Object.keys(maxHashes).length)
   return max;
 }
- 
+
+function reduceMaxFromOrig(matrix, max) {
+  var reducedMatrix = [];
+
+  matrix[0].map(function(_row, i) {
+    reducedMatrix.push([]);
+    return matrix.map(function(_col, j) {
+      reducedMatrix[i].push(max - matrix[i][j]);
+    })
+  })
+
+  return reducedMatrix;
+}
+
+function reduceHorizontally(matrix) {
+  var reducedSum = 0;
+
+  // for each row
+  matrix.map(function(row) {
+    var rowMin = Infinity;
+    // find rowMax
+    row.reduce(function(_col, element) {
+      rowMin = element < rowMin ? element : rowMin;
+    }, rowMin)
+    reduceSingleRow(row, rowMin); // intentional mutation
+    // add to reducedSum
+    reducedSum += rowMin;
+  })
+
+  return reducedSum;
+}
+
+function reduceSingleRow(row, min) {
+  console.log(min)
+  row.map(function(_elem, i) {
+    row[i] = row[i] - min;
+  })
+}
+
+function findMatrixSum(origMatrix) {
+  // initialize maxSum
+  var maxSum = 0;
+
+  // find individual max
+  var indMax = findIndMax(origMatrix);
+
+  // reduce all values from max
+  var matrix = reduceMaxFromOrig(origMatrix, indMax);
+  maxSum += indMax;
+  console.log(matrix)
+
+  // reduce horizontally
+  maxSum += reduceHorizontally(matrix); // intentional mutation
+
+  // reduce vertically
+  maxSum += reduceVertically(matrix); // intentional mutation
+  // for each column
+    // find colMax
+    // add to maxSum
+
+  // balancing
+
+
+  return maxSum;
+}
  
 var board =   [[7,  53, 183, 439, 863],
 [497, 383, 563,  79, 973],
@@ -71,5 +108,46 @@ var board2 = [[7,  53, 183, 439, 863, 497, 383, 563,  79, 973, 287,  63, 343, 16
 [815, 559, 813, 459, 522, 788, 168, 586, 966, 232, 308, 833, 251, 631, 107],
 [813, 883, 451, 509, 615,  77, 281, 613, 459, 205, 380, 274, 302,  35, 805]]
 
-// console.log(findMatrixSum(board) === 3315)
-console.log(findMatrixSum(board2) === 13938)
+console.log(findMatrixSum(board) === 3315)
+// console.log(findMatrixSum(board2) === 13938)
+ 
+// function findMatrixSum(matrix) {
+//   var max = 0;
+//   var maxHashes = {};
+
+
+//   var addMatrixRows = function(sum, usedCols, remainingRows) {
+//     console.log('usedCols: ', usedCols);
+
+//     if (remainingRows.length === 0) {
+//       max = sum > max ? sum : max;
+//       return;
+//     } 
+
+//     var key = usedCols.sort().toString();
+
+//     if (maxHashes[key] === undefined || maxHashes[key] < sum) {
+//       maxHashes[key] = sum;
+//     } else {
+//       console.log('repeat');
+//       return;
+//     }
+
+//     var currRow = remainingRows[0];
+
+//     for (var i = 0; i < currRow.length; i++) {
+//       if (usedCols.indexOf(i) === -1) {
+//         var newSum = sum + currRow[i];
+//         var newUsedCols = usedCols.concat([i]);
+//         var newRemainingRows = remainingRows.slice(1);
+
+//         addMatrixRows(newSum, newUsedCols, newRemainingRows);
+//       }
+//     }
+//   }  
+
+//   addMatrixRows(0, [], matrix);
+//   console.log(Object.keys(maxHashes).length)
+//   return max;
+// }
+ 
