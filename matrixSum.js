@@ -10,10 +10,10 @@
 function findIndMax(matrix) {
   var max = 0;
 
-  // mapping over each element
-  matrix[0].map(function(_row, i) {
-    return matrix.map(function(_col, j) {
-      max = matrix[i][j] > max ? matrix[i][j] : max;
+  // map over each element
+  matrix.map(function(row) {
+    row.map(function(elem) {
+      max = elem > max ? elem : max;
     })
   })
 
@@ -23,10 +23,10 @@ function findIndMax(matrix) {
 function reduceMaxFromOrig(matrix, max) {
   var reducedMatrix = [];
 
-  matrix[0].map(function(_row, i) {
+  matrix.map(function(row, i) {
     reducedMatrix.push([]);
-    return matrix.map(function(_col, j) {
-      reducedMatrix[i].push(max - matrix[i][j]);
+    row.map(function(elem) {
+      reducedMatrix[i].push(max - elem);
     })
   })
 
@@ -38,13 +38,11 @@ function reduceHorizontally(matrix) {
 
   // for each row
   matrix.map(function(row) {
-    var rowMin = Infinity;
-    // find rowMax
-    row.reduce(function(_col, element) {
-      rowMin = element < rowMin ? element : rowMin;
-    }, rowMin)
+    var rowMin = row.reduce(function(acc, elem) {
+      return elem < acc ? elem : acc;
+    })
+
     reduceSingleRow(row, rowMin); // intentional mutation
-    // add to reducedSum
     reducedSum += rowMin;
   })
 
@@ -52,9 +50,31 @@ function reduceHorizontally(matrix) {
 }
 
 function reduceSingleRow(row, min) {
-  console.log(min)
-  row.map(function(_elem, i) {
-    row[i] = row[i] - min;
+  row.map(function(elem, i) {
+    row[i] = elem - min;
+  })
+}
+
+function reduceVertically(matrix) {
+  var reducedSum = 0;
+
+  matrix[0].map(function(_elem, colIndex) {
+    // for each column
+    var colMin = matrix[colIndex].reduce(function(acc, _row, rowIndex) {
+      var elem = matrix[rowIndex][colIndex]
+      return elem < acc ? elem : acc;
+    })
+
+    reduceSingleColumn(matrix, colIndex, colMin); // intentional mutation
+    reducedSum += colMin
+  })
+
+  return reducedSum;
+}
+
+function reduceSingleColumn(matrix, colIndex, min) {
+  matrix.map(function(_row, rowIndex) {
+    matrix[rowIndex][colIndex] = matrix[rowIndex][colIndex] - min;
   })
 }
 
@@ -67,17 +87,20 @@ function findMatrixSum(origMatrix) {
 
   // reduce all values from max
   var matrix = reduceMaxFromOrig(origMatrix, indMax);
+  // console.log(matrix)
+
   maxSum += indMax;
-  console.log(matrix)
+  // console.log('maxSum: ', maxSum)
 
   // reduce horizontally
   maxSum += reduceHorizontally(matrix); // intentional mutation
+  // console.log(matrix)
+  // console.log('maxSum: ', maxSum)
 
   // reduce vertically
   maxSum += reduceVertically(matrix); // intentional mutation
-  // for each column
-    // find colMax
-    // add to maxSum
+  // console.log(matrix)
+  // console.log('maxSum: ', maxSum)
 
   // balancing
 
