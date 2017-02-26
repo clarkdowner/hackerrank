@@ -78,6 +78,88 @@ function reduceSingleColumn(matrix, colIndex, min) {
   })
 }
 
+function canAssign(matrix, assignedIndexes = []) {
+  var assignments = 0;
+
+  matrix.map(function(row, sliceAt) {
+    zeroIndexes = [];
+    row.map(function(elem, index) {
+      if (elem === 0 && assignedIndexes.indexOf(index) === -1) {
+        zeroIndexes.push(index);
+      }
+    })
+
+    if (zeroIndexes.length === 0) {
+      return false;
+    } else if (zeroIndexes.length === 1) {
+      assignments++;
+      assignedIndexes = assignedIndexes.concat(zeroIndexes);
+    } else {
+      return zeroIndexes.reduce(function(acc, elem) {
+        var tempAssign = zeroIndexes.concat([elem]);
+        return acc || canAssign(matrix.slice(sliceAt + 1), tempAssign);
+      }, false)
+    }
+  })
+
+  return assignments === matrix.length ? true : false;
+}
+
+function markBoard(matrix) {
+  var assignedIndexes = {}; // index: row
+  var markedRows = [];
+  var markedCols = [];
+
+  var markRow = function(rowNum) {
+    if (markedRows.indexOf(rowNum) === -1) {
+      markedRows.push(rowNum)
+    }
+  }
+  var markCol = function(colNum) {
+    if (markedCols.indexOf(colNum) === -1) {
+      markedCols.push(colNum)
+    }
+  }
+
+  matrix.map(function(row, rowIndex) {
+    // console.log('called')
+    var zeroIndexes = [];
+    row.map(function(elem, colIndex) {
+      if (elem === 0 && assignedIndexes[colIndex] === undefined) {
+        zeroIndexes.push(colIndex);
+      }
+    })
+    for (var i = 0; i < zeroIndexes.length; i++) {
+      var column = zeroIndexes[i];
+      if (assignedIndexes[column] === undefined) {
+        assignedIndexes[column] = [rowIndex];
+      } else {
+        assignedIndexes[column] = assignedIndexes[column].push(rowIndex);
+      }
+    }
+    // Mark all rows having no assignments (row 3).
+    if (zeroIndexes.length === 0) {
+      markRow(rowIndex);
+      row.map(function(elem, colIndex) {
+      // Mark all (unmarked) columns having zeros in newly marked row(s) (column 1).
+        if (elem === 0) { markCol(colIndex); }
+      })
+    }
+    // console.log("numAssigments: ", zeroIndexes.length)
+  })
+  // Mark all rows having assignments in newly marked columns (row 1).
+  for (var i = 0; i < markedCols.length; i++) {
+    var col = markedCols[i];
+    for (var j = 0; j < assignedIndexes[col].length; j++) {
+      var row = assignedIndexes[col][j];
+      markRow(row);
+    }
+  }
+
+  console.log('markedRows: ', markedRows);
+  console.log('markedCols: ', markedCols);
+}
+
 function findMatrixSum(origMatrix) {
   // initialize maxSum
   var maxSum = 0;
@@ -99,11 +181,16 @@ function findMatrixSum(origMatrix) {
 
   // reduce vertically
   maxSum += reduceVertically(matrix); // intentional mutation
-  // console.log(matrix)
+  console.log(matrix)
   // console.log('maxSum: ', maxSum)
 
-  // balancing
+  // while !canAssign
+  while (!canAssign(matrix)) {
+    // balance and redraw board
+    markBoard(matrix);
+    return maxSum;
 
+  }
 
   return maxSum;
 }
@@ -133,44 +220,3 @@ var board2 = [[7,  53, 183, 439, 863, 497, 383, 563,  79, 973, 287,  63, 343, 16
 
 console.log(findMatrixSum(board) === 3315)
 // console.log(findMatrixSum(board2) === 13938)
- 
-// function findMatrixSum(matrix) {
-//   var max = 0;
-//   var maxHashes = {};
-
-
-//   var addMatrixRows = function(sum, usedCols, remainingRows) {
-//     console.log('usedCols: ', usedCols);
-
-//     if (remainingRows.length === 0) {
-//       max = sum > max ? sum : max;
-//       return;
-//     } 
-
-//     var key = usedCols.sort().toString();
-
-//     if (maxHashes[key] === undefined || maxHashes[key] < sum) {
-//       maxHashes[key] = sum;
-//     } else {
-//       console.log('repeat');
-//       return;
-//     }
-
-//     var currRow = remainingRows[0];
-
-//     for (var i = 0; i < currRow.length; i++) {
-//       if (usedCols.indexOf(i) === -1) {
-//         var newSum = sum + currRow[i];
-//         var newUsedCols = usedCols.concat([i]);
-//         var newRemainingRows = remainingRows.slice(1);
-
-//         addMatrixRows(newSum, newUsedCols, newRemainingRows);
-//       }
-//     }
-//   }  
-
-//   addMatrixRows(0, [], matrix);
-//   console.log(Object.keys(maxHashes).length)
-//   return max;
-// }
- 
