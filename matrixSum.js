@@ -20,6 +20,26 @@ function findIndMax(matrix) {
   return max;
 }
 
+function inMarked(array, target) {
+  return array.indexOf(target) !== -1 ? true : false;
+}
+
+function findBalance(markedRows, markedCols, matrix) {
+  var min = Infinity;
+
+  matrix.map(function(row, rowIndex) {
+    if (inMarked(markedRows, rowIndex)) {
+      row.map(function(elem, colIndex) {
+        if (!inMarked(markedCols, colIndex)) {
+          min = elem < min ? elem : min;
+        }
+      })
+    }
+  })
+
+  return min;
+}
+
 function reduceMaxFromOrig(matrix, max) {
   var reducedMatrix = [];
 
@@ -78,86 +98,203 @@ function reduceSingleColumn(matrix, colIndex, min) {
   })
 }
 
-function canAssign(matrix, assignedIndexes = []) {
-  var assignments = 0;
 
-  matrix.map(function(row, sliceAt) {
-    zeroIndexes = [];
-    row.map(function(elem, index) {
-      if (elem === 0 && assignedIndexes.indexOf(index) === -1) {
-        zeroIndexes.push(index);
-      }
-    })
-
-    if (zeroIndexes.length === 0) {
-      return false;
-    } else if (zeroIndexes.length === 1) {
-      assignments++;
-      assignedIndexes = assignedIndexes.concat(zeroIndexes);
-    } else {
-      return zeroIndexes.reduce(function(acc, elem) {
-        var tempAssign = zeroIndexes.concat([elem]);
-        return acc || canAssign(matrix.slice(sliceAt + 1), tempAssign);
-      }, false)
-    }
-  })
-
-  return assignments === matrix.length ? true : false;
-}
-
-function markBoard(matrix) {
-  var assignedIndexes = {}; // index: row
+function canAssign(matrix) {
+  var assignedIndexes = {}; // col: row
   var markedRows = [];
   var markedCols = [];
 
-  var markRow = function(rowNum) {
-    if (markedRows.indexOf(rowNum) === -1) {
-      markedRows.push(rowNum)
-    }
-  }
-  var markCol = function(colNum) {
-    if (markedCols.indexOf(colNum) === -1) {
-      markedCols.push(colNum)
-    }
-  }
+  var markBoard = function() {
 
-  matrix.map(function(row, rowIndex) {
-    // console.log('called')
-    var zeroIndexes = [];
-    row.map(function(elem, colIndex) {
-      if (elem === 0 && assignedIndexes[colIndex] === undefined) {
-        zeroIndexes.push(colIndex);
+    // TODO: refactor with inMarked
+    var markRow = function(rowNum) {
+      if (markedRows.indexOf(rowNum) === -1) {
+        markedRows.push(rowNum)
+        return true;
       }
-    })
-    for (var i = 0; i < zeroIndexes.length; i++) {
-      var column = zeroIndexes[i];
-      if (assignedIndexes[column] === undefined) {
-        assignedIndexes[column] = [rowIndex];
-      } else {
-        assignedIndexes[column] = assignedIndexes[column].push(rowIndex);
-      }
+      return false;
     }
-    // Mark all rows having no assignments (row 3).
-    if (zeroIndexes.length === 0) {
-      markRow(rowIndex);
+    var markCol = function(colNum) {
+      if (markedCols.indexOf(colNum) === -1) {
+        markedCols.push(colNum)
+        return true;
+      }
+      return false;
+    }
+    var recursiveMarkRow = function(rowNum) {
+      var row = matrix[rowNum];
+      // Mark all (unmarked) columns having zeros in newly marked row(s)
       row.map(function(elem, colIndex) {
-      // Mark all (unmarked) columns having zeros in newly marked row(s) (column 1).
-        if (elem === 0) { markCol(colIndex); }
+        if (elem === 0 && markCol(colIndex)) { 
+          recursiveMarkCol(colIndex);
+        }
       })
     }
-    // console.log("numAssigments: ", zeroIndexes.length)
-  })
-  // Mark all rows having assignments in newly marked columns (row 1).
-  for (var i = 0; i < markedCols.length; i++) {
-    var col = markedCols[i];
-    for (var j = 0; j < assignedIndexes[col].length; j++) {
-      var row = assignedIndexes[col][j];
-      markRow(row);
+    var recursiveMarkCol = function(colNum) {
+      if (assignedIndexes[colNum] === undefined) {
+        return;
+      }
+      var rows = assignedIndexes[colNum];
+      rows.map(function(rowIndex) {
+        if (markRow(rowIndex)) {
+          recursiveMarkRow(rowIndex);
+        }
+      })
     }
+
+    matrix.map(function(row, rowIndex) {
+      var zeroIndexes = [];
+      row.map(function(elem, colIndex) {
+        if (elem === 0 && assignedIndexes[colIndex] === undefined) {
+          zeroIndexes.push(colIndex);
+        }
+      })
+      for (var i = 0; i < zeroIndexes.length; i++) {
+        var column = zeroIndexes[i];
+        if (assignedIndexes[column] === undefined) {
+          assignedIndexes[column] = [rowIndex];
+        } else {
+          assignedIndexes[column] = assignedIndexes[column].push(rowIndex);
+        }
+      }
+      // Mark all rows having no assignments 
+      if (zeroIndexes.length === 0) {
+        markRow(rowIndex);
+        recursiveMarkRow(rowIndex);
+      }
+    })
   }
 
-  console.log('markedRows: ', markedRows);
-  console.log('markedCols: ', markedCols);
+  markBoard();
+
+  if (markedCols.length === markedRows.length) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function markAndRedraw(matrix) {
+  var assignedIndexes = {}; // col: row
+  var markedRows = [];
+  var markedCols = [];
+
+  var markBoard = function() {
+
+    // TODO: refactor with inMarked
+    var markRow = function(rowNum) {
+      if (markedRows.indexOf(rowNum) === -1) {
+        markedRows.push(rowNum)
+        return true;
+      }
+      return false;
+    }
+    var markCol = function(colNum) {
+      if (markedCols.indexOf(colNum) === -1) {
+        markedCols.push(colNum)
+        return true;
+      }
+      return false;
+    }
+    var recursiveMarkRow = function(rowNum) {
+      var row = matrix[rowNum];
+      // Mark all (unmarked) columns having zeros in newly marked row(s)
+      row.map(function(elem, colIndex) {
+        if (elem === 0 && markCol(colIndex)) { 
+          recursiveMarkCol(colIndex);
+        }
+      })
+    }
+    var recursiveMarkCol = function(colNum) {
+      if (assignedIndexes[colNum] === undefined) {
+        return;
+      }
+      var rows = assignedIndexes[colNum];
+      rows.map(function(rowIndex) {
+        if (markRow(rowIndex)) {
+          recursiveMarkRow(rowIndex);
+        }
+      })
+    }
+
+    matrix.map(function(row, rowIndex) {
+      var zeroIndexes = [];
+      row.map(function(elem, colIndex) {
+        if (elem === 0 && assignedIndexes[colIndex] === undefined) {
+          zeroIndexes.push(colIndex);
+        }
+      })
+      for (var i = 0; i < zeroIndexes.length; i++) {
+        var column = zeroIndexes[i];
+        if (assignedIndexes[column] === undefined) {
+          assignedIndexes[column] = [rowIndex];
+        } else {
+          assignedIndexes[column] = assignedIndexes[column].push(rowIndex);
+        }
+      }
+      // Mark all rows having no assignments 
+      if (zeroIndexes.length === 0) {
+        markRow(rowIndex);
+        recursiveMarkRow(rowIndex);
+      }
+    })
+  }
+
+  var redrawBoard = function(amt) {
+    matrix.map(function(row, rowIndex) {
+      row.map(function(elem, colIndex) {
+        if (!inMarked(markedRows, rowIndex) && inMarked(markedCols, colIndex)) {
+          matrix[rowIndex][colIndex] = elem + amt;
+        } else if (inMarked(markedRows, rowIndex) && !inMarked(markedCols, colIndex)) {
+          matrix[rowIndex][colIndex] = elem - amt;
+        }
+      })
+    })
+  }
+
+  markBoard();
+  var balance = findBalance(markedRows, markedCols, matrix);
+  redrawBoard(balance);
+
+  return balance;
+}
+
+function findMaxReturnPositions(matrix) {
+  var positions = new Set();
+  var columnsClaimed = [];
+  var rowsClamined = [];
+
+  while (positions.size < matrix.length) {
+    matrix.map(function(row, rowIndex) {
+      if (rowsClamined.indexOf(rowIndex) === -1) {
+        var zeroIndexes = [];
+        row.map(function(elem, colIndex) {
+          if (elem === 0 && columnsClaimed.indexOf(colIndex) === -1) {
+            zeroIndexes.push(colIndex);
+          }
+        })
+        if (zeroIndexes.length === 1) {
+          columnsClaimed.push(zeroIndexes[0]);
+          rowsClamined.push(rowIndex);
+          // add to set
+          positions.add([rowIndex, zeroIndexes[0]])
+        }
+      }
+    })
+  }
+
+  return positions;
+}
+
+function addMaxPositions(matrix, positions) {
+  var sum = 0;
+
+  positions.forEach(function(tuple) {
+    var amt = matrix[tuple[0]][tuple[1]];
+    sum += amt;
+  })
+
+  return sum;
 }
 
 function findMatrixSum(origMatrix) {
@@ -169,30 +306,27 @@ function findMatrixSum(origMatrix) {
 
   // reduce all values from max
   var matrix = reduceMaxFromOrig(origMatrix, indMax);
-  // console.log(matrix)
 
-  maxSum += indMax;
-  // console.log('maxSum: ', maxSum)
+  // maxSum += indMax;
 
   // reduce horizontally
-  maxSum += reduceHorizontally(matrix); // intentional mutation
-  // console.log(matrix)
-  // console.log('maxSum: ', maxSum)
+  // maxSum += reduceHorizontally(matrix); // intentional mutation
+  reduceHorizontally(matrix); // intentional mutation
 
   // reduce vertically
-  maxSum += reduceVertically(matrix); // intentional mutation
-  console.log(matrix)
+  // maxSum += reduceVertically(matrix); // intentional mutation
+  reduceVertically(matrix); // intentional mutation
   // console.log('maxSum: ', maxSum)
 
   // while !canAssign
   while (!canAssign(matrix)) {
-    // balance and redraw board
-    markBoard(matrix);
-    return maxSum;
-
+    // maxSum += markAndRedraw(matrix);
+    markAndRedraw(matrix);
   }
 
-  return maxSum;
+  var set = findMaxReturnPositions(matrix);
+
+  return addMaxPositions(origMatrix, set);
 }
  
 var board =   [[7,  53, 183, 439, 863],
@@ -219,4 +353,5 @@ var board2 = [[7,  53, 183, 439, 863, 497, 383, 563,  79, 973, 287,  63, 343, 16
 [813, 883, 451, 509, 615,  77, 281, 613, 459, 205, 380, 274, 302,  35, 805]]
 
 console.log(findMatrixSum(board) === 3315)
-// console.log(findMatrixSum(board2) === 13938)
+console.log(findMatrixSum(board2) === 13938)
+// console.log(findMatrixSum(board))
