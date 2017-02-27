@@ -83,7 +83,7 @@ function reduceVertically(matrix) {
     var colMin = matrix[colIndex].reduce(function(acc, _row, rowIndex) {
       var elem = matrix[rowIndex][colIndex]
       return elem < acc ? elem : acc;
-    })
+    }, Infinity)
 
     reduceSingleColumn(matrix, colIndex, colMin); // intentional mutation
     reducedSum += colMin
@@ -105,7 +105,6 @@ function canAssign(matrix) {
   var markedCols = [];
 
   var markBoard = function() {
-
     // TODO: refactor with inMarked
     var markRow = function(rowNum) {
       if (markedRows.indexOf(rowNum) === -1) {
@@ -180,7 +179,6 @@ function markAndRedraw(matrix) {
   var markedCols = [];
 
   var markBoard = function() {
-
     // TODO: refactor with inMarked
     var markRow = function(rowNum) {
       if (markedRows.indexOf(rowNum) === -1) {
@@ -264,7 +262,11 @@ function findMaxReturnPositions(matrix) {
   var columnsClaimed = [];
   var rowsClamined = [];
 
-  while (positions.size < matrix.length) {
+  console.log('matrix: ', matrix)
+  var count = 0;
+  while (positions.size < matrix.length && count < 20) {
+  	count++;
+    // console.log(positions.size)
     matrix.map(function(row, rowIndex) {
       if (rowsClamined.indexOf(rowIndex) === -1) {
         var zeroIndexes = [];
@@ -306,27 +308,25 @@ function findMatrixSum(origMatrix) {
 
   // reduce all values from max
   var matrix = reduceMaxFromOrig(origMatrix, indMax);
-
+  // console.log('matrix: ', matrix);
   // maxSum += indMax;
 
   // reduce horizontally
-  // maxSum += reduceHorizontally(matrix); // intentional mutation
   reduceHorizontally(matrix); // intentional mutation
-
+  // console.log('matrix: ', matrix);
   // reduce vertically
-  // maxSum += reduceVertically(matrix); // intentional mutation
   reduceVertically(matrix); // intentional mutation
-  // console.log('maxSum: ', maxSum)
-
+  console.log('matrix: ', matrix);
   // while !canAssign
   while (!canAssign(matrix)) {
-    // maxSum += markAndRedraw(matrix);
     markAndRedraw(matrix);
+    console.log('redraw')
   }
 
-  var set = findMaxReturnPositions(matrix);
+  // var set = findMaxReturnPositions(matrix);
+  // console.log('set: ', set)
 
-  return addMaxPositions(origMatrix, set);
+  // return addMaxPositions(origMatrix, set);
 }
  
 var board =   [[7,  53, 183, 439, 863],
@@ -352,6 +352,6 @@ var board2 = [[7,  53, 183, 439, 863, 497, 383, 563,  79, 973, 287,  63, 343, 16
 [815, 559, 813, 459, 522, 788, 168, 586, 966, 232, 308, 833, 251, 631, 107],
 [813, 883, 451, 509, 615,  77, 281, 613, 459, 205, 380, 274, 302,  35, 805]]
 
-console.log(findMatrixSum(board) === 3315)
+// console.log(findMatrixSum(board) === 3315)
 console.log(findMatrixSum(board2) === 13938)
 // console.log(findMatrixSum(board))
