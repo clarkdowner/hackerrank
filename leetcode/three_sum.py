@@ -19,36 +19,28 @@ class Solution:
         :type nums: List[int]
         :rtype: List[List[int]]
         """
-        # sols = set()
-        # s_hash = {}
-        # for i in range(len(nums) - 1):
-        #     for j in range(i+1, len(nums)):
-        #         key = nums[i] + nums[j]
-        #         if key not in s_hash:
-        #             s_hash[key] = set()
-        #         s_hash[key].add((min(i, j), max(i, j),))
-        # print(s_hash)
-        # for i in range(len(nums)):
-        #     key = -1 * nums[i]
-        #     if key in s_hash:
-        #         print('key is: ', key)
-        #         for x in s_hash[nums[i]]:
-        #             print('hashes: ', nums[x[0]], nums[x[1]])
-        #             if i not in x:
-        #                 sol = tuple(sorted([nums[x[0]], nums[x[1]], nums[i]]))
-        #                 sols.add(sol)
-        #
-        # return [list(x) for x in sols]
-        solutions = set()
+        sols = set()
+        nums.sort()
         for i in range(len(nums) - 2):
-            for j in range(i + 1, len(nums) - 1):
-                for k in range(j + 1, len(nums)):
-                    if nums[i] + nums[j] + nums[k] == 0:
-                        vals = [nums[i], nums[j], nums[k]]
-                        vals.sort()
-                        solutions.add(tuple(vals))
-        return [list(x) for x in solutions]
+            if nums[i] <= 0 and (nums[i] != nums[i - 1] or i == 0):
+                j = i + 1
+                if nums[i] + nums[j] <= 0:
+                    k = len(nums) - 1
+                    while j != k:
+                        sum = nums[i] + nums[j] + nums[k]
+                        if sum == 0:
+                            sol = (nums[i], nums[j], nums[k])
+                            sols.add(sol)
+                            j += 1
+                        elif sum < 0:
+                            j += 1
+                        else:
+                            k -= 1
+                else:
+                    continue
 
-s = Solution()
-# print(s.threeSum([-1, 0, -1]))
-print(s.threeSum([-1, 0, 1, 2, -1, -4]))
+        return [list(x) for x in sols]
+
+
+# s = Solution()
+# print(s.threeSum([-1, 0, 1, 2, -1, -4]))
