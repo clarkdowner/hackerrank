@@ -22,17 +22,15 @@ class Solution:
         if len(nums) <= 1:
             return len(nums)
 
-        last_seen = nums[0]
-        i = 1
-        while i < len(nums):
-            if nums[i] == last_seen:
-                nums.pop(i)
-            else:
-                last_seen = nums[i]
+        i, j = 1, 1
+        while j < len(nums):
+            if nums[i] != nums[i - 1]:
+
                 i += 1
-        if len(nums) > 1 and nums[-2] == nums[-1]:
-            nums.pop(-1)
-        return len(nums)
+            j += 1
+        return i
 
 s = Solution()
 print(s.removeDuplicates([1, 2, 2]))
+print(s.removeDuplicates([1, 2, 2, 2]))
+print(s.removeDuplicates([1, 1, 2]))
