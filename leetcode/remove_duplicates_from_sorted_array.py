@@ -22,15 +22,13 @@ class Solution:
         if len(nums) <= 1:
             return len(nums)
 
-        i, j = 1, 1
+        i, j = 0, 1
         while j < len(nums):
-            if nums[i] != nums[i - 1]:
-
+            if nums[j] != nums[i]:
+                nums[i + 1] = nums[j]
                 i += 1
             j += 1
-        return i
+        return i + 1
 
 s = Solution()
 print(s.removeDuplicates([1, 2, 2]))
-print(s.removeDuplicates([1, 2, 2, 2]))
-print(s.removeDuplicates([1, 1, 2]))
