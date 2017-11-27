@@ -15,6 +15,4 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
-        nums.sort()
-        filter = [x for i, x in enumerate(nums) if i % 2 == 0]
-        return sum(filter)
+        return sum(sorted(nums)[::2])
