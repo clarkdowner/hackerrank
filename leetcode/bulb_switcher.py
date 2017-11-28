@@ -12,7 +12,7 @@ After third round, the three bulbs are [on, off, off].
 
 So you should return 1, because there is only one bulb is on.
 """
-
+import math
 
 class Solution(object):
     def bulbSwitch(self, n):
@@ -20,4 +20,4 @@ class Solution(object):
         :type n: int
         :rtype: int
         """
-        return int(n**0.5)
+        return int(math.sqrt(n))
