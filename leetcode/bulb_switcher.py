@@ -20,10 +20,4 @@ class Solution(object):
         :type n: int
         :rtype: int
         """
-        l = [False] * n
-
-        for i in range(n):
-            for j in range(i, n, i+1):
-                l[j] = not l[j]
-
-        return sum(l)
+        return int(n**0.5)
