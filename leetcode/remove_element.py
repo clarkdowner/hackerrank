@@ -22,8 +22,7 @@ class Solution:
         d = 0
         for i in range(len(nums)):
             if nums[i - d] == val:
-                nums[i - d] = nums[len(nums) - 1]
-                nums.pop()
+                nums[i - d] = nums[len(nums) - 1 - d]
                 d += 1
 
-        return len(nums)
+        return len(nums) - d
