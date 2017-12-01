@@ -31,9 +31,7 @@ class Solution:
             if nums[swap_index] < nums[j]:
                 swap_to = j
 
-        temp = nums[swap_index]
-        nums[swap_index] = nums[swap_to]
-        nums[swap_to] = temp
+        nums[swap_index], nums[swap_to] = nums[swap_to], nums[swap_index]
 
         # bubble sort remaining
         for k in range(swap_index + 1, len(nums) - 1):
