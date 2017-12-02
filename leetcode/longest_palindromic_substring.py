@@ -16,27 +16,30 @@ Output: "bb"
 """
 
 class Solution(object):
-    def longestPalindrome(self, s, l = 0, r = None):
+    def longestPalindrome(self, s):
         """
         :type s: str
         :rtype: str
         """
-        if not len(s):
-            return None
+        longest = ''
+        for i in range(len(s)):
+            temp = self.helper(s, i, i)
+            if len(temp) > len(longest):
+                longest = temp
+            temp = self.helper(s, i, i + 1)
+            if len(temp) > len(longest):
+                longest = temp
+        return longest
 
-        if r is None:
-            r = len(s)
+    def helper(self, s, l, r):
+        pal = ''
+        while l >= 0 and r < len(s) and s[l] == s[r]:
+            pal = s[l:r+1]
+            l -= 1
+            r += 1
+        return pal
 
-        if l == r:
-            return s[l:r]
-
-        if s[l:r] == s[l:r][::-1]:
-            return s[l:r]
-
-        a = self.longestPalindrome(s, l + 1, r)
-        b = self.longestPalindrome(s, l, r - 1)
-
-        if len(a) > len(b):
-            return a
-        else:
-            return b
+s = Solution()
+print(s.longestPalindrome('babad'))
+print(s.longestPalindrome('babaddtattarrattatddetartrateedredividerb'))
+print(s.longestPalindrome('cbbd'))
