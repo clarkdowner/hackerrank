@@ -29,11 +29,8 @@ Using the above tables as example, return the following:
 +-----------+
 */
 
-select Name as Customers
-from (
-    select c.Name, o.CustomerId
-    from Customers c
-    left join Orders o
-    on c.Id = o.CustomerId
-) as j
-where j.CustomerId is null
+select c.Name as Customers
+from Customers c
+left join Orders o
+on c.Id = o.CustomerId
+where o.CustomerId is null
