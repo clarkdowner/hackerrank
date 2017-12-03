@@ -29,8 +29,9 @@ Using the above tables as example, return the following:
 +-----------+
 */
 
-select c.Name as Customers
-from Customers c
-left join Orders o
-on c.Id = o.CustomerId
-where o.CustomerId is null
+SELECT Name AS Customers
+FROM Customers
+WHERE id NOT IN (
+    SELECT CustomerId
+    FROM Orders
+)
