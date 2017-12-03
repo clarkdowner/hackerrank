@@ -23,12 +23,21 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[List[int]]
         """
+        # subsets = set()
+        # for num in nums:
+        #     for subset in subsets:
+        #         subsets.add(subset + (num,))
+        #     subsets.add((num,))
+        # return subsets
+        nums.sort()
         subsets = [[]]
         for num in nums:
             for subset in subsets[::]:
                 subsets.append(subset[::] + [num])
             subsets.append([num])
-        sort = [sorted(x) for x in subsets]
-        tups = [tuple(x) for x in sort]
+        tups = [tuple(x) for x in subsets]
         sets = set(tups)
         return [list(x) for x in sets]
+
+s = Solution()
+print(s.subsetsWithDup([1,2,2]))
