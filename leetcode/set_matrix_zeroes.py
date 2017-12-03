@@ -10,26 +10,21 @@ class Solution(object):
         :type matrix: List[List[int]]
         :rtype: void Do not return anything, modify matrix in-place instead.
         """
-        rows = set()
-        cols = set()
-        for i, row in enumerate(matrix):
-            for j, elem in enumerate(row):
-                if elem == 0:
-                    rows.add(i)
-                    cols.add(j)
+        height = len(matrix)
+        if height == 0: return
+        width = len(matrix[0])
 
-        r = len(matrix)
-        c = len(matrix[0])
+        for i in range(height):
+            for j in range(width):
+                if matrix[i][j] == 0:
+                    for k in range(height):
+                        if matrix[k][j] != 0:
+                            matrix[k][j] = 'a'
+                    for k in range(width):
+                        if matrix[i][k] != 0:
+                            matrix[i][k] = 'a'
 
-        def zeroRow(row):
-            matrix[row] = [0] * c
-
-        def zeroCol(col):
-            for i in range(r):
-                matrix[i][col] = 0
-
-        for i in rows:
-            zeroRow(i)
-
-        for i in cols:
-            zeroCol(i)
+        for i in range(height):
+            for j in range(width):
+                if matrix[i][j] == 'a':
+                    matrix[i][j] = 0
