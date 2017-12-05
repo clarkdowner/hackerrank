@@ -10,7 +10,7 @@ to the original URL.
 
 class Codec:
     def __init__(self):
-        self.long_to_short = {}
+        self.url_pairs = {}
         self.short_to_long = {}
 
     def encode(self, longUrl):
@@ -36,10 +36,8 @@ class Codec:
         :type shortUrl: str
         :rtype: str
         """
-        if shortUrl not in self.short_to_long:
-            return None
+        return self.short_to_long.get(shortUrl, None)
 
-        return self.short_to_long[shortUrl]
 
     @staticmethod
     def gen_random_url(length):
