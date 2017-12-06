@@ -25,7 +25,5 @@ If you enjoyed this kata more advanced and generalized version of it can be foun
 
 def tribonacci(signature, n):
     while len(signature) < n:
-        signature.append(signature[-1] + signature[-2] + signature[-3])
-        for i in range(3, len(signature) - 1, -1):
-            signature[i] = signature[i-1] + signature[i-2] + signature[i-3]
+        signature.append(sum(signature[-3:]))
     return signature[:n]
