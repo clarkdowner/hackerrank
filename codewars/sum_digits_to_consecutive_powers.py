@@ -23,18 +23,13 @@ Enjoy it!!
 """
 
 
+def is_sol(a):
+    s_a = str(a)
+    sum = 0
+    for i in range(len(s_a)):
+        sum += int(s_a[i]) ** (i + 1)
+    return sum == a
+
+
 def sum_dig_pow(a, b):
-    solutions = []
-
-    def is_sol(a):
-        s_a = str(a)
-        sum = 0
-        for i in range(len(s_a)):
-            sum += int(s_a[i]) ** (i+1)
-        return sum == a
-
-    for i in range(a, b+1):
-        if is_sol(i):
-            solutions.append(i)
-
-    return solutions
+    return [x for x in range(a, b+1) if is_sol(x)]
