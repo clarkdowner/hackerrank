@@ -12,14 +12,5 @@ NOTE: All numbers will be whole numbers greater than 0.
 def expanded_form(num):
     s = str(num)
     d = len(s)
-    exp = []
 
-    for i in range(len(s)):
-        if s[i] != '0':
-            exp.append(str(int(s[i]) * 10**(d-i-1)))
-
-    return ' + '.join(exp)
-
-
-print(expanded_form(70304))
-
+    return ' + '.join([str(int(s[i]) * 10**(d-i-1)) for i in range(len(s)) if s[i] != '0'])
