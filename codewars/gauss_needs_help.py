@@ -19,12 +19,6 @@ Advanced - experienced users should try to solve it in one line, without loops, 
 can.
 """
 
-from functools import reduce
-
 
 def f(n):
-    try:
-        return reduce((lambda a,b: a+b), range(1,n+1))
-    except:
-        return None
-
+    return sum(range(n+1)) if (isinstance(n, int) and n > 0) else None
