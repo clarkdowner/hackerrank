@@ -19,16 +19,12 @@ Advanced - experienced users should try to solve it in one line, without loops, 
 can.
 """
 
+from functools import reduce
 
-def f(n, s=0):
+
+def f(n):
     try:
-        int(float(n))
-    except ValueError:
+        return reduce((lambda a,b: a+b), range(1,n+1))
+    except:
         return None
-    if int(float(n)) != n or n <= 0:
-        return None
-
-    for i in range(1, n+1):
-        s += i
-    return s
 
