@@ -21,9 +21,14 @@ can.
 
 
 def f(n, s=0):
-    if n < 0:
+    try:
+        int(float(n))
+    except ValueError:
         return None
-    elif n == 0:
-        return s
-    else:
-        return f(n-1, s+n)
+    if int(float(n)) != n or n <= 0:
+        return None
+
+    for i in range(1, n+1):
+        s += i
+    return s
+
