@@ -18,26 +18,7 @@ Attention: If the number has leading zeros the amount of digits should be consid
 
 
 def increment_string(strng):
-    ind = -1
-    for i, c in enumerate(reversed(strng)):
-        if not try_int(c):
-            break
-        ind = len(strng) - i - 1
-    if ind < 0:
-        return strng + '1'
-    return strng[:ind] + inc_str_num(strng[ind:])
-
-
-def try_int(char):
-    try:
-        int(char)
-        return True
-    except ValueError:
-        return False
-
-
-def inc_str_num(str_num):
-    inc = str(int(str_num)+1)
-    while len(inc) < len(str_num):
-        inc = '0' + inc
-    return inc
+    head = strng.rstrip('0123456789')
+    tail = strng[len(head):]
+    if not len(tail): return head + '1'
+    return head + str(int(tail)+1).zfill(len(tail))
