@@ -21,15 +21,14 @@ class Node(object):
 
 
 def length(node):
-    l = 0
-    while node is not None:
-        node, l = node.next, l+1
-    return l
+    while node:
+        return 1 + length(node.next)
+    return 0
 
 
 def count(node, data):
-    c = 0
-    while node is not None:
-        if node.data == data: c += 1
-        node = node.next
-    return c
+    while node:
+        if node.data == data:
+            return 1 + count(node.next, data)
+        return count(node.next, data)
+    return 0
