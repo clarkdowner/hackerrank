@@ -18,18 +18,18 @@ If n is <= 0 then return the input text.
 
 
 def decrypt(text, n):
-    if n <= 0 or text is None or len(text) < 1: return text
+    if text in (None, ''): return text
 
-    def decrypted(t):
-        h = int(len(t)/2)
-        o, p = t[:h], t[h:]
-        return ''.join([''.join([p[i] if i < len(p) else '', o[i] if i < len(o) else '']) for i in range(h+1)])
-    return decrypt((decrypted(text)), n-1)
+    h = len(text) // 2
+    for i in range(n):
+        o, p = text[:h], text[h:]
+        text = ''.join([p[j:j+1] + o[j:j+1] for j in range(h+1)])
+    return text
 
 
 def encrypt(text, n):
-    if n <= 0 or text is None or len(text) < 1: return text
+    if text in (None, ''): return text
 
-    def encrypted(t):
-        return ''.join(t[1::2]) + ''.join(t[::2])
-    return encrypt((encrypted(text)), n-1)
+    for _ in range(n):
+        text = text[1::2] + text[::2]
+    return text
