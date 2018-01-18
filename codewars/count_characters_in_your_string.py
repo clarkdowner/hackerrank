@@ -9,8 +9,5 @@ What if the string is empty ? Then the result should be empty object literal { }
 def count(string):
     map = {}
     for char in string:
-        if char in map:
-            map[char] += 1
-        else:
-            map[char] = 1
+        map[char] = map.get(char, 0) + 1
     return map
