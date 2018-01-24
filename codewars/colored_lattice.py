@@ -15,14 +15,13 @@ def count_col_triang(input_pts):
                         tot += 1
         return tot
 
-    def is_valid_triangle(coord1, coord2,coord3):
-        return three_by_det(coord1[0], coord1[1], 1, coord2[0], coord2[1], 1, coord3[0], coord3[1], 1) != 1
+    def is_valid_triangle(c1, c2, c3):
+        return th_det(c1[0], c1[1], 1, c2[0], c2[1], 1, c3[0], c3[1], 1) != 0
 
-    def three_by_det(a, b, c, d, e, f, g, h, i):
-        # return a*e*i + b*f*g + c*d*h - c*e*g - b*d*i - a*f*h
-        return a*(two_by_det(e, f, h, i)) - b*(two_by_det(d, f, g, i)) + c*(two_by_det(d, e, g, h))
+    def th_det(a, b, c, d, e, f, g, h, i):
+        return a*(tw_det(e, f, h, i)) - b*(tw_det(d, f, g, i)) + c*(tw_det(d, e, g, h))
 
-    def two_by_det(a, b, c, d):
+    def tw_det(a, b, c, d):
         return a*d - b*c
 
     for point in input_pts:
@@ -43,27 +42,11 @@ def count_col_triang(input_pts):
         elif c == tri_ct:
             tri_colors.append(color)
         tri_tot += c
-    print(sorted(tri_colors))
+
     s_colors = sorted(tri_colors)
-    print(type(s_colors))
+    s_colors.append(tri_ct)
+
     points = len(input_pts)
     colors = len(color_map.keys())
-    most = s_colors.append(tri_ct)
-    print(tri_ct)
-    return [points, colors, tri_tot, most]
 
-
-print(count_col_triang(
-    [
-        [[3, -4], 'blue'],
-        [[-7, -1], 'red'],
-        [[7, -6], 'yellow'],
-        [[2, 5], 'yellow'],
-        [[1, -5], 'red'],
-        [[1, 1], 'red'],
-        [[1, 7], 'red'],
-        [[1, 4], 'red'],
-        [[-3, -5], 'blue'],
-        [[4, 1], 'blue']
-    ]))
-
+    return [points, colors, tri_tot, [] if tri_tot == 0 else s_colors]
