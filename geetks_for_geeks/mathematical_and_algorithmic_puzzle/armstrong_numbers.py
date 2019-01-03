@@ -29,6 +29,34 @@ def is_armstrong_number(number):
     return sum == number
 
 
+def is_armstrong_number_(number):
+    """
+    Unused solution using map function
+
+    :param number:
+    :return:
+    """
+    sum_of_cubed_digits = sum(map(cube, str(number)))
+
+    return number == sum_of_cubed_digits
+
+
+def cube(number):
+    return int(number) ** 3
+
+
+if __name__ == '__main__':
+
+    test_cases = int(input())
+
+    for i in range(test_cases):
+        number_to_eval = int(input())
+
+        if is_armstrong_number(number_to_eval):
+            print('Yes')
+        else:
+            print('No')
+
 if __name__ == '__main__':
 
     test_cases = int(input())
