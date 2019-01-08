@@ -35,4 +35,4 @@ if __name__ == '__main__':
     for i in range(test_cases):
         test = input()
         _len = int(input())
-        print('%20'.join(test.split()))
+        print(test.replace(' ', '%20'))
