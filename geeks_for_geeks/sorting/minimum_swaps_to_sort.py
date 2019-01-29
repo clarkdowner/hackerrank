@@ -55,20 +55,19 @@ Driver Code to call/invoke your function is mentioned above. '''
 # function should return an integer denoting the minimum number of swap's
 def minSwaps(arr, n):
     match_to = sorted(arr)
+
+    # map elements to sorted index
+    position = {elem: idx for idx, elem in enumerate(match_to)}
+
     swaps = 0
-
-    for i in range(len(arr)):
-        current_set = {i}
-        next_idx = match_to.index(arr[i])
-
-        while next_idx not in current_set:
-            current_set.add(next_idx)
-            next_idx = match_to.index(arr[next_idx])
-
-        for idx in current_set:
-            arr[idx] = match_to[idx]
-
-        swaps += len(current_set) - 1
-        current_set.clear()
+    i = 0
+    while i < len(arr):
+        if position[arr[i]] == i:
+            # move on
+            i += 1
+        else:
+            # swap positions
+            arr[position[arr[i]]], arr[i] = arr[i], arr[position[arr[i]]]
+            swaps += 1
 
     return swaps
