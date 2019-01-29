@@ -35,16 +35,16 @@ Output:
 """
 
 
-{
-if __name__ == '__main__':
-    t = int(input())
-for i in range(t):
-    n = int(input())
-arr = list(map(int, input().strip().split()))
-print(minSwaps(arr, n))
-# Contributed by: Harshit Sidhwa
-
-}
+# {
+# if __name__ == '__main__':
+#     t = int(input())
+# for i in range(t):
+#     n = int(input())
+# arr = list(map(int, input().strip().split()))
+# print(minSwaps(arr, n))
+# # Contributed by: Harshit Sidhwa
+#
+# }
 
 ''' Please note that it's Function problem i.e.
 you need to write your solution in the form of Function(s) only.
