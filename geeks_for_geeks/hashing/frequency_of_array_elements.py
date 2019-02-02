@@ -33,8 +33,17 @@ if __name__ == '__main__':
     test_cases = int(input())
 
     for i in range(test_cases):
-        n_range = range(1, int(input()) + 1)
+        n = int(input())
+        n_range = range(1, n + 1)
         test_case = list(map(int, input().split()))
 
-        counts = list(map(lambda x: str(test_case.count(x)), n_range))
-        print(' '.join(counts))
+        ctr = list(map(lambda x: x - 1, test_case))
+
+        for i in range(n):
+            idx = ctr[i] % n
+            ctr[idx] += n
+
+        for i in range(n):
+            ctr[i] //= n
+
+        print(*ctr)
