@@ -35,7 +35,6 @@ Output:
 Explanation: The pairs are : (1 , 20 ) , (5 , 16 ) , (8 ,13 ) ,( 11 , 10 )
 """
 
-
 if __name__ == '__main__':
 
     test_cases = int(input())
@@ -51,10 +50,7 @@ if __name__ == '__main__':
         for _ in range(n):
             keys = list(map(int, input().split()))
             for val in keys:
-                if val in second:
-                    second[val] += 1
-                else:
-                    second[val] = 1
+                second[val] = second.get(val, 0) + 1
 
         solution_count = 0
 
