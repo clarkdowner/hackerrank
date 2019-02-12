@@ -33,10 +33,10 @@ def find_median(list_):
     sorted_list = sorted(list_)
 
     num_elems = len(list_)
+    mid = num_elems // 2
     if num_elems % 2 == 1:  # odd number of elements
-        return sorted_list[num_elems // 2]
+        return sorted_list[mid]
     else:
-        mid = num_elems // 2
         return (sorted_list[mid - 1] + sorted_list[mid]) // 2
 
 
