@@ -47,4 +47,4 @@ if __name__ == '__main__':
 
     for _ in range(test_cases):
         n = int(input())
-        print(len(calculate_stairs(n))
+        print(len(calculate_stairs(n)))
